@@ -1,0 +1,20 @@
+screen: screen_class 
+
+router:
+  class: router_class
+  ip: router_lan_ip
+  user: admin_login
+  password: admin_password
+  prompt: router_telnet_prompt
+
+
+commands:
+  sleep: 5
+  exclude:
+    - dummy
+
+images:
+  sleep: 5
+  exclude:
+    - dummy
+
