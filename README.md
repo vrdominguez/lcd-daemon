@@ -18,4 +18,4 @@ As root, add the init.d script to rc with update-rc.d: update-rc.d lcd-daemom de
 
 Notes
 ------------
-At this moment, only Vodafone HG556a is supported for ADSL data and public IP grab, you can add your own router to base/Router.py (you can add them to excluded commands at config.yml to a quic test of the daemon)
+At this moment, only Vodafone HG556a is supported for ADSL data and public IP grab, you can add your own router to base/Router.py (you can add Ip and Adsl to excluded commands at config.yml for a quick test of the daemon)
