@@ -63,19 +63,25 @@ class DaemonLCD:
 		while True:
 			# Run info commands
 			for command in avaliable_commands:
-				command_runner = CommandRunner(command)
-				command_runner.instance()
-				output = command_runner.launchCommand()
-				logger.debug(output)
-				screen.screenMessage(output)
-				time.sleep(commands_config['sleep'])
+				try:
+					command_runner = CommandRunner(command)
+					command_runner.instance()
+					output = command_runner.launchCommand()
+					logger.debug(output)
+					screen.screenMessage(output)
+					time.sleep(commands_config['sleep'])
+				except Exception as e:
+					logger.error("Error executing '" + command + "': " + str(e))
 			
 			#Load screen images
 			for image in avaliable_images: 
-				image_to_screen = app_dir + '/images/' + image
-				logger.debug("LOAD: " + image_to_screen)
-				screen.loadImage(image_to_screen)
-				time.sleep(images_config['sleep'])
+				try:
+					image_to_screen = app_dir + '/images/' + image
+					logger.debug("LOAD: " + image_to_screen)
+					screen.loadImage(image_to_screen)
+					time.sleep(images_config['sleep'])
+				except Exception as e:
+					logger.error("Error loading image '" + image + "': " + str(e))
 
 
 lcd_daemon_app = DaemonLCD()

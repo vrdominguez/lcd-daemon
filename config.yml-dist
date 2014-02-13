@@ -18,3 +18,5 @@ images:
   exclude:
     - dummy
 
+disk: /path/to/mountpoint
+
