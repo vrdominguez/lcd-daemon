@@ -61,11 +61,17 @@ class DaemonLCD:
 			self.running = 0
 			logger.error("Error loading screen control for " + screen_type + ". lcdDaemon finished!")
 			sys.exit(1)
+		try:
+			self.screen.loadImage( app_dir + '/images/' + Command().loadConfig('splash') )
+		except Exception as e:
+			logger.error("Error showing splash image: " + str(e))
 		
 		# Turn off led light (if required)
 		if not led_power:
 			logger.debug('Turnin off led light')
-			self.screen.ledLight(0)
+			self.screen.ledLightProgressive(0)
+		else:
+			time.sleep(5)
 
 		while True:
 			# Run info commands
@@ -89,6 +95,14 @@ class DaemonLCD:
 					time.sleep(images_config['sleep'])
 				except Exception as e:
 					logger.error("Error loading image '" + image + "': " + str(e))
+
+	def __del__(self):
+		if self.running:
+			self.screen.clear()
+			self.screen.ledLight(0)
+			self.led_power = 0
+			self.running = 0
+			logger.info('Daemon finished')
 
 
 logger = logging.getLogger("lcd-daemon")

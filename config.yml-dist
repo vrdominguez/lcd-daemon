@@ -1,7 +1,11 @@
+# Screen type:
 screen: screen_class 
 
+#Screen initialize:
+splash: raspi.bmp
 led: 0
 
+#Router config
 router:
   class: router_class
   ip: router_lan_ip
@@ -9,16 +13,18 @@ router:
   password: admin_password
   prompt: router_telnet_prompt
 
-
+#Commands config (time betwen commands and excluded commands)
 commands:
   sleep: 5
   exclude:
-    - dummy
+    - Dummy
 
+#Splash images config (time betwen images and excluded images)
 images:
   sleep: 5
   exclude:
-    - dummy
+    - Dummy
 
+# Disk space configuration
 disk: /path/to/mountpoint
 

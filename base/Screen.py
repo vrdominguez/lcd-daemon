@@ -56,16 +56,22 @@ class NokiaLCD:
 	
 	def ledLight(self,power=1):
 		if power > 0:
+			self.control.led(255)
+		else:
+			self.control.led(0)
+			
+	def ledLightProgressive(self,power=1):
+		if power > 0:
 			for i in range(0,255):
 				self.control.led(i)
 				time.sleep(0.025)
-			self.control .led(255)
+			self.control.led(255)
 			
 		else:
 			for i in range(255,0,-1):
 				self.control.led(i)
 				time.sleep(0.025)
-			self.control .led(0)
+			self.control.led(0)
 	
 	def clear(self):
 		self.control.cls()
