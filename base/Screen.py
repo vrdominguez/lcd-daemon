@@ -66,3 +66,6 @@ class NokiaLCD:
 				self.control.led(i)
 				time.sleep(0.025)
 			self.control .led(0)
+	
+	def clear(self):
+		self.control.cls()

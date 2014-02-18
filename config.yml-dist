@@ -1,5 +1,7 @@
 screen: screen_class 
 
+led: 0
+
 router:
   class: router_class
   ip: router_lan_ip

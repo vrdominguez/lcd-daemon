@@ -7,8 +7,7 @@ app_dir = os.path.dirname(os.path.realpath(sys.argv[0]))
 sys.path.append(app_dir + '/base')
 sys.path.append(app_dir + '/commands')
 
-from CommandRunner import CommandRunner
-from Command import Command
+from Command import Command, CommandRunner
 
 class DaemonLCD:
 	def __init__(self): 
@@ -17,12 +16,17 @@ class DaemonLCD:
 		self.stderr_path = '/dev/null'
 		self.pidfile_path =  '/var/run/lcdDaemon.pid'
 		self.pidfile_timeout = 5
+		self.running = 0
 	
 	def run(self):
+		logger.info("lcdDaemon started!")
+		self.running = 1
+		
 		# Load configs
 		screen_type = Command().loadConfig('screen')
 		commands_config = Command().loadConfig('commands')
 		images_config = Command().loadConfig('images')
+		led_power = Command().loadConfig('led')
 		
 		
 		# Get list of commands to run (exclude commands including them in config.yml)
@@ -52,13 +56,16 @@ class DaemonLCD:
 		try:
 			module = __import__('Screen')
 			class_ = getattr(module, screen_type)
-			screen = class_()
+			self.screen = class_()
 		except:
+			self.running = 0
 			logger.error("Error loading screen control for " + screen_type + ". lcdDaemon finished!")
 			sys.exit(1)
 		
-		# Turn off led light
-		screen.ledLight(0)
+		# Turn off led light (if required)
+		if not led_power:
+			logger.debug('Turnin off led light')
+			self.screen.ledLight(0)
 
 		while True:
 			# Run info commands
@@ -68,7 +75,7 @@ class DaemonLCD:
 					command_runner.instance()
 					output = command_runner.launchCommand()
 					logger.debug(output)
-					screen.screenMessage(output)
+					self.screen.screenMessage(output)
 					time.sleep(commands_config['sleep'])
 				except Exception as e:
 					logger.error("Error executing '" + command + "': " + str(e))
@@ -78,13 +85,12 @@ class DaemonLCD:
 				try:
 					image_to_screen = app_dir + '/images/' + image
 					logger.debug("LOAD: " + image_to_screen)
-					screen.loadImage(image_to_screen)
+					self.screen.loadImage(image_to_screen)
 					time.sleep(images_config['sleep'])
 				except Exception as e:
 					logger.error("Error loading image '" + image + "': " + str(e))
 
 
-lcd_daemon_app = DaemonLCD()
 logger = logging.getLogger("lcd-daemon")
 logger.setLevel(logging.INFO) #Set to logging.DEBUG while debugging 
 formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -92,6 +98,7 @@ handler = logging.FileHandler('/var/log/lcdDaemon.log')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
+lcd_daemon_app = DaemonLCD()
 lcd_daemon_runner = runner.DaemonRunner(lcd_daemon_app)
 # Avoid clossing log file
 lcd_daemon_runner.daemon_context.files_preserve=[handler.stream]
