@@ -13,4 +13,4 @@ class Adsl(Command):
 	
 		output = router.getConnectionStatus()
 		
-		return ['  ADSL STATUS', '--------------', '---Upstream---', output[1], '--Downstream--', output[2]]
+		return ['  ADSL STATUS', '--------------', '- Upstream:', output[1], '- Downstream:', output[2]]
