@@ -35,15 +35,14 @@ if instance_command in avaliable_commands:
 		module = __import__(instance_command)
 		class_ = getattr(module, instance_command)
 		command= class_()
-		
-	except:
-		print "Error loading the command '" + launched_command + "'"
+	except Exception as e:
+		print "Error loading the command '" + launched_command + "': " + str(e)
 		sys.exit(1)
 	
 	try:
 		print command.runCommand()
-	except: 
-		print "Error executing", launched_command
+	except Exception as e: 
+		print "Error executing " +  launched_command + ": " + str(e)
 		sys.exit(1)
 else:
 	print 'Command "' + launched_command + '" not avaliable'
