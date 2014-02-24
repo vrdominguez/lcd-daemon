@@ -88,6 +88,11 @@ class VodafoneHG556a(Router):
 			if (data):
 				return data.group(1)
 		return 'unknown'
+	
+	def getArpTable(self):
+		command_output = self.execute('arp show')
+		del(command_output[0])
+		return command_output
 
 #Add your router here to get the router commands running
 class AnotherCompanyRouter(Router):
